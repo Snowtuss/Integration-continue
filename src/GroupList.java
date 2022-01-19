@@ -5,12 +5,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 
 public class GroupList {
 
@@ -19,6 +21,7 @@ public class GroupList {
 	int nmbrGroups;
 	String lastGroup;
 	List<Group> Groups;
+	int MAX_USERS;
 	/*
 	GroupList(int nmbrUsers,int nmbrGroups,String lastGroup,UserList users){
 		//this.nmbrUsers=nmbrUsers;
@@ -27,8 +30,8 @@ public class GroupList {
 		//this.users=users;
 	}
 	*/
-	void setLast(int MAX_USERS){
-		int nmbrUsers = MAX_USERS;
+	void setLast(){
+		int nmbrUsers = this.MAX_USERS;
 		int mod = nmbrUsers%nmbrGroups;
 		if(mod == 0) 
 			lastGroup = "LAST_NONE";
@@ -79,7 +82,9 @@ public class GroupList {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+		this.MAX_USERS=MAX_USERS;
+		this.nmbrGroups = this.Groups.size();
+		//setLast();
 	}
 	void addGroup(Group group) {
 		Groups.add(group);
@@ -110,6 +115,26 @@ public class GroupList {
 		return g;
 	}
 	
+	void updateGroups(String username,String groupname) {
+		BufferedReader reader;
+		try {
+			reader = new BufferedReader(new FileReader("./grouplist.txt"));
+			String line = reader.readLine();
+			while (line != null) {
+				//content+=line;
+				String[] explode = line.split(":");
+				//User user = new User(Integer.parseInt(explode[0]),explode[1],explode[2],explode[3],explode[4]);
+				//users.put(Integer.parseInt(explode[0]), user);
+				if(explode[0].equals(groupname))
+					replaceLine(line,line+":"+username);
+				line = reader.readLine();
+			}
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	//TOOLS
 	public static <T> List<T> ArrayToListConversion(T array[])   
 	{   
 		//creating the constructor of the List class  
@@ -123,5 +148,29 @@ public class GroupList {
 		//returns the list converted into Array  
 		return list;   
 	} 
+	void replaceLine(String oldLine,String newLine) throws IOException {
+		//Instantiating the File class
+	      String filePath = "./grouplist.txt";
+	      //Instantiating the Scanner class to read the file
+	      Scanner sc = new Scanner(new File(filePath));
+	      //instantiating the StringBuffer class
+	      StringBuffer buffer = new StringBuffer();
+	      //Reading lines of the file and appending them to StringBuffer
+	      while (sc.hasNextLine()) {
+	         buffer.append(sc.nextLine()+System.lineSeparator());
+	      }
+	      String fileContents = buffer.toString();
+	      //System.out.println("Contents of the file: "+fileContents);
+	      //closing the Scanner object
+	      sc.close();
+	      //Replacing the old line with new line
+	      fileContents = fileContents.replaceAll(oldLine, newLine);
+	      //instantiating the FileWriter class
+	      FileWriter writer = new FileWriter(filePath);
+	     // System.out.println("");
+	      //System.out.println("new data: "+fileContents);
+	      writer.append(fileContents);
+	      writer.flush();
+	}
 	
 }

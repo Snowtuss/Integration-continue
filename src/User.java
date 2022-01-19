@@ -20,6 +20,12 @@ public class User {
 			this.password = password;
 			this.groupName = groupName;
 		}
+		User(int id,String username,String password){
+			this.id = id;
+			this.username = username;
+			this.password = password;
+			this.groupName = "NONE";
+		}
 		//SETTERS AND GETTERS
 		String getUsername() {
 			return this.username;
@@ -47,8 +53,10 @@ public class User {
 				leaveGroup(groups);
 			//GroupList.checkGroup();
 			group.addUser(this.username);
+			this.groupName=group.name;
 			if(group.nmbrUsers > 1)
 				group.status = "ACTIF";
+			groups.updateGroups(username,group.name);
 		}
 		
 		boolean haveGroup() {
@@ -75,6 +83,7 @@ public class User {
 			users.add(this.username);
 			Group newGroup = new Group(groupName,users,"INACTIF",MAX_USERS);
 			groups.Groups.add(newGroup);
+			groups.updateGroups(username,groupName);
 			return groupName;
 		}
 		
@@ -101,7 +110,7 @@ public class User {
 			String s= "";
 			if(this.haveGroup()) {
 				Group g = groups.findGroup(this.groupName);
-				s="Group Name : " + g.name + "\n List of user : ";
+				s="Group Name : " + g.name + "\nList of users : ";
 				for(String username : g.users)
 					s+=username + " ";
 				s+="\n";
