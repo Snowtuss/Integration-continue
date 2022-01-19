@@ -96,7 +96,7 @@ public class User {
 					availableGroups.add(g);
 			}
 			Random rand = new Random();
-	        int randomNum = rand.nextInt(0, availableGroups.size() + 1);
+	        int randomNum = rand.nextInt(0, availableGroups.size());
 	        this.joinGroup(availableGroups.get(randomNum),groups);
 		}
 		
