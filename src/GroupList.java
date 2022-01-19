@@ -115,7 +115,7 @@ public class GroupList {
 		return g;
 	}
 	
-	void updateGroups(String username,String groupname) {
+	void updateGroups(String username,String groupname,String option) {
 		BufferedReader reader;
 		try {
 			reader = new BufferedReader(new FileReader("./grouplist.txt"));
@@ -125,8 +125,13 @@ public class GroupList {
 				String[] explode = line.split(":");
 				//User user = new User(Integer.parseInt(explode[0]),explode[1],explode[2],explode[3],explode[4]);
 				//users.put(Integer.parseInt(explode[0]), user);
-				if(explode[0].equals(groupname))
-					replaceLine(line,line+":"+username);
+				if(explode[0].equals(groupname)) {
+					if(option.equals("ADD"))
+						replaceLine(line,line+":"+username);
+					else
+						replaceLine(line,line.replaceAll(":"+username, ""));
+				}
+					
 				line = reader.readLine();
 			}
 			reader.close();

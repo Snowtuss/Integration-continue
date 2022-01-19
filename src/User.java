@@ -56,11 +56,11 @@ public class User {
 			this.groupName=group.name;
 			if(group.nmbrUsers > 1)
 				group.status = "ACTIF";
-			groups.updateGroups(username,group.name);
+			groups.updateGroups(username,group.name,"ADD");
 		}
 		
 		boolean haveGroup() {
-			if(this.groupName == "NONE")
+			if(this.groupName.equals("NONE"))
 				return false;
 			else
 				return true;
@@ -83,7 +83,7 @@ public class User {
 			users.add(this.username);
 			Group newGroup = new Group(groupName,users,"INACTIF",MAX_USERS);
 			groups.Groups.add(newGroup);
-			groups.updateGroups(username,groupName);
+			joinGroup(newGroup,groups);
 			return groupName;
 		}
 		
@@ -103,7 +103,9 @@ public class User {
 		void leaveGroup(GroupList groups) {
 			if(this.haveGroup()) {
 				groups.findGroup(this.groupName).users.remove(this.username);
+				groups.updateGroups(username,this.groupName,"REMOVE");
 				this.groupName = "NONE";
+				
 			}
 		}
 		String GroupInfo(GroupList groups) {
